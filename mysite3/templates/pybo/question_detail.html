@@ -1,5 +1,11 @@
-<h1>{{ question_list.subject }}</h1>
+<h1>{{ question.subject }}</h1>
 
 <div>
-    {{ question_list.content }}
+    {{ question.content }}
 </div>
+
+<form actions="{% url 'pybo:answer_create' question.id %}" method="post">
+    {% csrf_token %}
+    <textarea name="content" id="content" rows="15"></textarea>
+    <input type="submit" value="답변등록">
+</form>
