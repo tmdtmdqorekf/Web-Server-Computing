@@ -1,4 +1,4 @@
-from datetime import timezone
+from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Question
 
@@ -17,6 +17,6 @@ def detail(request, question_id):
 
 def answer_create(request, question_id):
     question=get_object_or_404(Question, pk=question_id)
-    question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now())
+    question.answer_set.create(content=request.POST.get('content'), created_date=timezone.now())
     
     return redirect('pybo:detail', question_id=question.id)
