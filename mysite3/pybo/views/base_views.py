@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from ..models import Question
 
@@ -9,8 +9,16 @@ def index(request):
     # GET 방식으로 호출된 URL에서 page 가져올 때 사용
     page = request.GET.get('page', '1')
     kw = request.GET.get('kw', '')  # 검색어
+    so = request.GET.get('so', 'recent') # 정렬 기준
 
-    question_list = Question.objects.all()
+    if so == 'recommend':
+        question_list = Question.objects.annotate(
+            num_voter=Count('voter')).order_by('-num_voter', '-created_date')
+    elif so == 'popular':
+        question_list = Question.objects.annotate(
+            num_answer=Count('answer')).order_by('-num_answer', '-created_date')
+    else:
+        question_list = Question.objects.order_by('-created_date')
 
     if kw:
         question_list = question_list.filter(
